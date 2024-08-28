@@ -22,6 +22,7 @@ RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
 RUN echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch' > \
         /etc/pacman.d/mirrorlist && \
     pacman -Sy --noconfirm --needed \
+        at-spi2-core \
         base-devel \
         dbus \
         grep \
