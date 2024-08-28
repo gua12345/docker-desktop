@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv bash
+
+exec /usr/sbin/Xvnc \
+  -rfbport $VNC_PORT \
+  -desktop "$VNC_TITLE" \
+  -geometry "$VNC_GEOMETRY" \
+  -listen tcp \
+  -ac \
+  -SecurityTypes None \
+  -AlwaysShared \
+  -AcceptKeyEvents \
+  -AcceptPointerEvents \
+  -SendCutText \
+  -AcceptCutText $DISPLAY

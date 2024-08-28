@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bash
+
+# default file copies first run
+if [[ ! -f $HOME/.config/openbox/autostart ]]; then
+  mkdir -p $HOME/.config/openbox && \
+  cp /defaults/autostart $HOME/.config/openbox/autostart && \
+  chown -R abc:abc $HOME/.config/openbox
+fi
+
+if [[ ! -f $HOME/.config/openbox/menu.xml ]]; then
+  mkdir -p $HOME/.config/openbox && \
+  cp /defaults/menu.xml $HOME/.config/openbox/menu.xml && \
+  chown -R abc:abc $HOME/.config/openbox
+fi
+
+if [[ ! -d $HOME/.cache/openbox ]]; then
+  mkdir -p $HOME/.cache/openbox && \
+  chown -R abc:abc $HOME/.cache/openbox
+fi

@@ -1,0 +1,23 @@
+#!/usr/bin/with-contenv bash
+
+if [[ ! -d /var/cache/fontconfig ]]; then
+  mkdir -p /var/cache/fontconfig && \
+  chmod 777 /var/cache/fontconfig
+fi
+
+
+if [[ ! -d $HOME/.cache ]]; then
+  mkdir -p $HOME/.cache && \
+  chown -R abc:abc $HOME/.cache
+fi
+if [[ ! -d $HOME/.cache/fontconfig ]]; then
+  mkdir -p $HOME/.cache/fontconfig && \
+  chown -R abc:abc $HOME/.cache/fontconfig
+fi
+
+
+if [[ ! -d $HOME/.config ]]; then
+  mkdir -p $HOME/.config && \
+  chmod 700 $HOME/.config && \
+  chown -R abc:abc $HOME/.config
+fi

@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+export NOVNC_DIR="/usr/share/webapps/novnc"
+
+# default file copies first run
+if [[ ! -f $NOVNC_DIR/index.html ]]; then
+  ln -s $NOVNC_DIR/vnc.html $NOVNC_DIR/index.html
+fi
