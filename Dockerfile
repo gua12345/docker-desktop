@@ -2,7 +2,9 @@ FROM ghcr.io/linuxserver/baseimage-arch:latest
 
 ENV DEBIAN_FRONTEND=noninteractive \
     WINDOWMANAGER=openbox \
-    LANG=C \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
     DISPLAY=:0 \
     VNC_TITLE=TigerVNC \
     VNC_HOST=127.0.0.1 \
@@ -12,8 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     NOVNC_PORT=6081 \
     HOME=/config
 
-RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
-    echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
+RUN echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
     locale-gen && \
     mkdir -p /usr/share/man/man1 && \
