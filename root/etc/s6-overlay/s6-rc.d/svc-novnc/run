@@ -1,9 +1,9 @@
 #!/usr/bin/with-contenv bash
 
+export PAGE_TITLE=$TITLE
+
 cd $HOME
 exec s6-setuidgid abc \
-  /bin/bash \
-    PAGE_TITLE=$TITLE \
-    /usr/sbin/novnc \
-      --vnc "$VNC_HOST:$VNC_PORT" \
-      --listen "$NOVNC_HOST:$NOVNC_PORT"
+  /bin/bash /usr/sbin/novnc \
+    --vnc "$VNC_HOST:$VNC_PORT" \
+    --listen "$NOVNC_HOST:$NOVNC_PORT"
