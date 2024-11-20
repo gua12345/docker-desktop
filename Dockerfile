@@ -1,5 +1,7 @@
-FROM ghcr.io/linuxserver/baseimage-arch:latest
+# 使用 ARM64 的 Debian Slim 基础镜像
+FROM debian:bullseye-slim
 
+# 设置环境变量
 ENV DEBIAN_FRONTEND=noninteractive \
     WINDOWMANAGER=openbox \
     LC_ALL=en_US.UTF-8 \
@@ -14,49 +16,51 @@ ENV DEBIAN_FRONTEND=noninteractive \
     NOVNC_PORT=6081 \
     HOME=/config
 
-RUN echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
-    locale-gen && \
-    mkdir -p /usr/share/man/man1 && \
-    chsh -s /bin/bash abc
-
-RUN echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch' > \
-        /etc/pacman.d/mirrorlist && \
-    pacman -Sy --noconfirm --needed \
+# 配置 Ubuntu 的源并安装必要软件
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository universe && \
+    sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y \
         at-spi2-core \
-        base-devel \
+        build-essential \
         dbus \
         grep \
         iproute2 \
-        iputils \
+        iputils-ping \
         openbox \
-        procps-ng \
-        python-numpy \
+        procps \
+        python3-numpy \
         sudo \
-        tigervnc \
-        wqy-zenhei \
-        xterm && \
-    echo '[archlinuxcn]' >> /etc/pacman.conf && \
-    echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf && \
-    echo 'abc ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
-    pacman -Sy --noconfirm --needed archlinuxcn-keyring && \
-    pacman -Sy --noconfirm --needed yay && \
-    exec s6-setuidgid abc \
-        yay -Sy --noconfirm --needed \
-            novnc && \
-    pacman -Rs base-devel && \
-    pacman -Rs $(pacman -Qdtq) && \
-    yay -Scc --noconfirm && \
-    pacman -Scc --noconfirm && \
-    rm -rf \
-        /tmp/* \
-        /var/cache/pacman/pkg/* \
-        /var/lib/pacman/sync/* \
-        /config/.cache/yay/*
+        tigervnc-standalone-server \
+        fonts-wqy-zenhei \
+        xterm \
+        wget \
+        novnc && \
+    echo "abc ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# 设置默认语言
+RUN echo "LANG=en_US.UTF-8" > /etc/default/locale && \
+    locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8
 
+# 创建并设置默认用户
+RUN useradd -m -s /bin/bash abc && \
+    mkdir -p /config && \
+    chown -R abc:abc /config
+
+# 拷贝必要的配置文件到容器中
 COPY /root /
 RUN chmod +x /etc/s6-overlay/s6-rc.d/*/run
 
+# 暴露端口和挂载点
 EXPOSE 5901 6081
 VOLUME /config
+
+# 设置默认用户和启动命令
+USER abc
+CMD ["bash"]
