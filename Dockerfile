@@ -17,10 +17,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     HOME=/config
 
 # 配置 Ubuntu 的源并安装必要软件
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository universe && \
-    sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse" >> /etc/apt/sources.list && \
     apt-get update && \
     apt-get install -y \
         at-spi2-core \
