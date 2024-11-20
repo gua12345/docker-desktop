@@ -41,11 +41,6 @@ RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.li
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 设置默认语言
-RUN echo "LANG=en_US.UTF-8" > /etc/default/locale && \
-    locale-gen en_US.UTF-8 && \
-    update-locale LANG=en_US.UTF-8
-
 # 创建并设置默认用户
 RUN useradd -m -s /bin/bash abc && \
     mkdir -p /config && \
