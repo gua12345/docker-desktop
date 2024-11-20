@@ -20,8 +20,9 @@ RUN echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
     mkdir -p /usr/share/man/man1 && \
     chsh -s /bin/bash abc
 
-RUN echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch' > \
-        /etc/pacman.d/mirrorlist && \
+# 修改为 Arch Linux ARM 官方源
+RUN echo 'Server = http://mirror.archlinuxarm.org/$arch/$repo' > /etc/pacman.d/mirrorlist && \
+    pacman-key --init && pacman-key --populate archlinuxarm && \
     pacman -Sy --noconfirm --needed \
         at-spi2-core \
         base-devel \
@@ -38,7 +39,6 @@ RUN echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
         xterm && \
     echo '[archlinuxcn]' >> /etc/pacman.conf && \
     echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf && \
-    echo 'abc ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
     pacman -Sy --noconfirm --needed archlinuxcn-keyring && \
     pacman -Sy --noconfirm --needed yay && \
     exec s6-setuidgid abc \
@@ -53,7 +53,6 @@ RUN echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
         /var/cache/pacman/pkg/* \
         /var/lib/pacman/sync/* \
         /config/.cache/yay/*
-
 
 COPY /root /
 RUN chmod +x /etc/s6-overlay/s6-rc.d/*/run
